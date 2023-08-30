@@ -27,3 +27,7 @@ HTML, CSS & Javascript
 ## Link to deployed site
 
 https://james-brainard.github.io/webapi-code-quiz/
+
+## Screenshot of Application
+
+[Application Screenshot](js-code-game.JPG)
