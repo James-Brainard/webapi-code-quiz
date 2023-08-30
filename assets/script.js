@@ -12,6 +12,7 @@ let highScoreList = document.getElementById('highscore-list');
 let restart = document.getElementById('go-back');
 let clearScores = document.getElementById('clear-scores');
 let yourScore = document.getElementById('your-score');
+let finalScore = document.getElementById('final-score');
 
 // Timer variables
 let timer = 75;
@@ -28,6 +29,7 @@ let option2 = document.createElement("button");
 let option3 = document.createElement("button");
 let option4 = document.createElement("button");
 let revealAnswer = document.createElement("h3");
+
 
 const quizQuestions = [
   {
@@ -61,12 +63,17 @@ function countDown () {
   let timerInterval = setInterval(function (){
     timer --;
     timerLeft.textContent = timer;
-    if (timer === 0) {
+    if (timer <= 0) {
+      console.log("step-1");
+      timerLeft.textcontent = "0"; 
       clearInterval(timerInterval);
-      timerLeft.textcontent = "";
+      endQuiz();
+      clearTimer();
+    } else if (timerSwitch) {
+      clearInterval(timerInterval);
     }
   }, 1000);
-}
+};
 
 
 let score = 0;
@@ -74,31 +81,78 @@ let currentQuiz = 0;
 
 function hideMainPage () {
   mainPage.style.display = "none";
-}
+};
 
-// under showNextQuestion if we run thru all it should shoot back up. first line needs to check if any questions are left. 
 function endQuiz () {
-  console.log('hello'); 
-  // Need to hide newly created main div
-  // Need to display #input-score
-  // Need to store input-score to local storage
-  // Need to display the score (seconds left) in #your-score
-  // Hide #input-score
-  // Show highscores or show both at same time.
+  mainDiv.style.display = "none";
+  timerSwitch = true;
+  inputScore.style.display = "block";
+  finalScore.textContent = timer;
   // Reset the currentQuiz, reset score
   // #go-back could start game or show first div quiz-container. 
-  // 
+  // need to fix score to not go negative.
+  // need to stop game once TIMER HIT ZERO
+};
+
+function showHighScores () {
+  // hide the game
+  // show the #highscore-list
+  // get score from local storage
+  // to display scores on the 'view hs button'
+}
+
+function clearHighscores () {
+  // find way to clear local storage
+  // clear ul elements
+}
+
+function restartGame () {
+  //restart.addEventListener('click', resetAll); // event listener which will invoke a function to then 
+  // find a way to reset varibles and/or timer
+  // timerLeft = 75
+  // hide highscores userinput and show quiz-container.
+}
+
+// need this function to reset back to .quiz-container
+function resetAll () {
+  highScoreContainer.style.display = "none";
+  mainPage.style.display = "block";
+  
+}
+
+function submitBtn (event) {
+  event.preventDefault();
+  let userInitialsInput = userInitials.value;
+  const userInfo = {
+    score: timer,
+    initials: userInitials.value
+  }
+  let previousScores = JSON.parse(localStorage.getItem('score'));
+  if (previousScores != null) {
+    previousScores.push(userInfo);
+    localStorage.setItem("score", JSON.stringify(previousScores));
+  } else {
+    localStorage.setItem('score', JSON.stringify([userInfo]));
+  }
+  inputScore.style.display = "none";
+  highScoreContainer.style.display = "block";
+  const getItem = localStorage.getItem('score');
+  let scoreList = document.createElement("li");
+  highScoreList.appendChild(scoreList);
+  scoreList.textContent = getItem;
+}
+
+function clearTimer () {
+  timerLeft.textContent = "0"
 };
 
 function isCorrect (event) {
     if (event.target.value == quizQuestions[currentQuiz].correct) {
-      console.log("correct"); 
-      currentQuiz ++; 
+      currentQuiz ++;
       showNextQuestion (); 
     } else {
-      console.log('incorrect');
       timer = timer - 15;
-    }
+    } 
 };
 
 function showNextQuestion () {
@@ -128,8 +182,6 @@ function showNextQuestion () {
 };
 
 
-
-
 console.log(questionTitle);
 
 function beginQuestions () {
@@ -138,4 +190,6 @@ function beginQuestions () {
   showNextQuestion();
 }
 
+restart.addEventListener('click', resetAll);
+submitScore.addEventListener('click', submitBtn);
 beginQuiz.addEventListener("click", beginQuestions);
