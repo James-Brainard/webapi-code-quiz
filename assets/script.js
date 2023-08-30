@@ -18,6 +18,8 @@ let finalScore = document.getElementById('final-score');
 let timer = 75;
 let questionCount = 0;
 let timerSwitch = false;
+let score = 0;
+let currentQuiz = 0;
 
 console.log(timerLeft);
 
@@ -29,6 +31,7 @@ let option2 = document.createElement("button");
 let option3 = document.createElement("button");
 let option4 = document.createElement("button");
 let revealAnswer = document.createElement("h3");
+
 
 
 const quizQuestions = [
@@ -76,8 +79,7 @@ function countDown () {
 };
 
 
-let score = 0;
-let currentQuiz = 0;
+
 
 function hideMainPage () {
   mainPage.style.display = "none";
@@ -117,7 +119,13 @@ function restartGame () {
 function resetAll () {
   highScoreContainer.style.display = "none";
   mainPage.style.display = "block";
-  
+  resetQuiz();
+}
+
+let resetQuiz = function () {
+  currentQuiz = 0;
+  timer = 76;
+  questionCount = 0;
 }
 
 function submitBtn (event) {
